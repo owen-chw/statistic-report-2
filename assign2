@@ -1,0 +1,30 @@
+library("ggplot2")
+
+n5 <- rep(NA, 1000) #建立一個大小一千的空array
+n10 <- rep(NA, 1000)
+n30 <- rep(NA, 1000)
+for( i in 1:1000 ){  #i從1做到M 做1000次
+  n5[i] <- mean(runif(5, min=0, max=1))   #runif: 產生5個符合U(0,1)的 random varaible , 再做平均
+  n10[i] <- mean(runif(10, min=0, max=1))   #runif: 產生10個符合U(0,1)的 random varaible , 再做平均
+  n30[i] <- mean(runif(30, min=0, max=1))   #runif: 產生30個符合U(0,1)的 random varaible , 再做平均
+}
+
+x <- seq(0, 1, length=1000)
+df <- data.frame(n5,n10,n30)
+
+ggplot(df)+
+  geom_density(aes(x=n5, col="n=5"))+
+  geom_density(aes(x=n10, col="n=10"))+
+  geom_density(aes(x=n30, col="n=30"))+
+  geom_line(aes(x, y=dnorm(x, 1/2, sqrt(1/(12*10))), col="Normal n=10"))+
+  geom_line(aes(x, y=dnorm(x, 1/2, sqrt(1/(12*30))), col="Normal n=30"))+
+  geom_line(aes(x, y=dnorm(x, 1/2, sqrt(1/(12*5))), col="Normal n=5"))+
+  labs(x = "x_bar", y = "density")+
+  scale_color_discrete(name = "")
+
+mean(n5)+qt(0.975, length(n5)-1)*sd(n5)/sqrt(length(n5))
+mean(n5)-qt(0.975, length(n5)-1)*sd(n5)/sqrt(length(n5))
+mean(n10)+qt(0.975, length(n10)-1)*sd(n10)/sqrt(length(n10))
+mean(n10)-qt(0.975, length(n10)-1)*sd(n10)/sqrt(length(n10))
+mean(n30)+qt(0.975, length(n30)-1)*sd(n30)/sqrt(length(n30))
+mean(n30)-qt(0.975, length(n30)-1)*sd(n30)/sqrt(length(n30))
